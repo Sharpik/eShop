@@ -56,11 +56,16 @@ public class Pricing {
 			if (Methods.getMethod().fractionalDigits() == -1) dec = -1;
 			else dec = Math.pow(10, Methods.getMethod().fractionalDigits());
 			for (line=1; (string = br.readLine()) != null; line++) {
+                            
 				String[] s = string.split(" ");
+                                
 				int id;
 				byte data;
 				double buy, sell, temp;
-				if (s.length == 3) {
+                                
+                                // ID Buy Sell
+				if (s.length == 3)
+                                {
 					i=0; id = Integer.parseInt(s[0]); 
 					if (id <= 0) throw new NumberFormatException();
 					
@@ -71,6 +76,7 @@ public class Pricing {
 						if (temp != buy) rounded = true;
 						buy = temp;
 					}
+                                        temp = 0;
 					
 					i=2; sell = Double.parseDouble(s[2]);
 					if (sell < 0) throw new NumberFormatException();
@@ -79,6 +85,7 @@ public class Pricing {
 						if (temp != sell) rounded = true;
 						sell = temp;
 					}
+                                        temp = 0;
 					
 					if (buy == 0 && sell == 0) continue;
 					
@@ -86,7 +93,11 @@ public class Pricing {
 					else data = -1;
 					
 					costs.put(new MaterialData(id, data), new Pricing( buy, sell ));
-				} else if (s.length == 4) {
+				}
+                                
+                                // ID DATA Buy Sell
+                                else if (s.length == 4)
+                                {
 					i=0; id = Integer.parseInt(s[0]); 
 					if (id <= 0) throw new NumberFormatException();
 					
@@ -97,7 +108,8 @@ public class Pricing {
 						if (temp != buy) rounded = true;
 						buy = temp;
 					}
-					
+                                        temp = 0;
+                                        
 					i=2; sell = Double.parseDouble(s[3]);
 					if (sell < 0) throw new NumberFormatException();
 					if (dec!=-1) {
@@ -105,17 +117,24 @@ public class Pricing {
 						if (temp != sell) rounded = true;
 						sell = temp;
 					}
-					
+					temp = 0;
+                                        
 					i=3; data = Byte.parseByte(s[1]);
 					if (data < 0) throw new NumberFormatException();
 					
 					if (buy == 0 && sell == 0) continue;
 					
-					if (Material.getMaterial(id).getMaxDurability() != -1 && data != 0) data = -1;
-					else if (Material.getMaterial(id).getData() == null) data = 0;
+                                        // pokud výdrž itemu není dána a zároveň data jsou dány
+					/*if (Material.getMaterial(id).getMaxDurability() != -1 && data != 0) data = -1;
+					else if (Material.getMaterial(id).getData() == null) data = 0;*/
+                                        //if ( Material.getMaterial(id).getData() == null ) data = 0;
+                                        //TADY Je nějakej ERROR
 					
 					costs.put(new MaterialData(id, data), new Pricing( buy, sell ));
-				} else {
+				}
+                                
+                                else
+                                {
 					log.log(Level.SEVERE, "[eShop] there's an error in plugins/eShop/item.price.txt! " +
 							"line " + line + " has an invalid number of parameters. " +
 									"each line should have numbers for: " +
